@@ -1,4 +1,4 @@
-
+خ
 name: Build APK
 
 on:
@@ -19,8 +19,10 @@ jobs:
           
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.x'
-          channel: 'stable'
+
+     
+        flutter-version: '3.22.x'
+        working-directory: ./  channel: 'stable'
           cache: true
           
       - run: flutter pub get
