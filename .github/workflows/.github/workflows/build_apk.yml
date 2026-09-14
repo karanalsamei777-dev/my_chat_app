@@ -1,0 +1,45 @@
+name: Build APK and PWA
+
+on:
+  push:
+    branches: [ "main", "master", "dev" ]
+  pull_request:
+    branches: [ "main", "master", "dev" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          # تم إلغاء تفعيل الـ cache الافتراضي لـ Gradle لمنع خطأ المسارات الذي ظهر في السجلات (No matches found)
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+        # أضف working-directory هنا إذا كان مشروعك داخل مجلد فرعي (مثلاً: ./my_chat_app)
+
+      - name: Build APK
+        run: flutter build apk --release
+        # أضف working-directory هنا أيضاً إذا لزم الأمر
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          # إذا كان مسار المشروع فرعياً، قم بتعديل المسار ليصبح: my_chat_app/build/app/outputs/flutter-apk/app-release.apk
